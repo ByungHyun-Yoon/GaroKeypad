@@ -21,3 +21,4 @@
 <resources>
     <dimen name="key_height">46dip</dimen>
 </resources>
+<!-- values에 있는 dimens의 key_height 값이 있는데 이건 뭘까? R.java에도 dimen 클래스에 이 정보는 없는 것 같다. 알자바에 있는거는 values의 dimen으로 추정..미스테리.. -->
