@@ -25,3 +25,11 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         />
+<!--  xmlns:android="http://schemas.android.com/apk/res/android" xml 이름공간 선언으로 안드로이드 도구에게 안드로이드 이름공간에 정의된 속성들을 참조하려고 한다는 것을 암시한다.
+        android:id="@+id/keyboard"  레이 아웃에 아이디를 할당한다. 이 아이디를 이용하여서 소스코드에서 이 텍스트 뷰를 참조할 수 있다.
+        android:layout_alignParentBottom="true"	 상대레이아웃 속성값으로 부모 컨테이너의 상대적 위치를 이용해서 컨트롤을 배치하는 방법이다. layout_alignParentBottom은 부모컨테이너의 아래쪽을 맞춘다.
+        android:layout_width="fill_parent" 화면에서 폭을 얼마나 차지할 것인가? fill_parent는 전체 화면의 폭을 다 차지하는 것을 의미한다.
+        android:layout_height="wrap_content" 	화면에서 얼마나 길이를 차지할 것인가? wrap_content는 뷰에 들어 있는 내용물의 크기에 따라 길이가 결정되도록 조정한다. 
+        
+        레이 아웃 리소스에 input.xml의 총 평가는...(주관적) 키보드가 생성될때 키보드가 차지하는 공간을 할당할때 필요한 폭과 높이 그리고 위치를 정의 한것 같다. 
+        ********우리는 아마도 레이아웃을 두개로 만드는 것이 아니라 양쪽으로 키보드가 배치된 레이아웃 한개를 정의해야 할 것이다. *********-->	
