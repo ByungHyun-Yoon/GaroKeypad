@@ -35,3 +35,5 @@
         <Key android:codes="-2" android:keyLabel="123" android:keyWidth="25%p"/>
     </Row>
 </Keyboard>
+
+<!-- 한글 모드 일때 가로모드로 하면 이렇게 쿼티식이 아니라 천지인으로 바뀐다. 그때 쓰는 키들을 정의 한듯.  -->
