@@ -58,3 +58,5 @@
                 android:keyWidth="20%p" android:keyEdgeFlags="right"/>
     </Row>
 </Keyboard>
+
+<!-- 저 codes의 값 113이 q의 유니코드라고 했는데 아마 내 추측으로는 이건 한글 모드인데 "ㅂ"의 유니코드랑 q의 유니코드랑 같은것같다? 나머지는 똑같다. -->
