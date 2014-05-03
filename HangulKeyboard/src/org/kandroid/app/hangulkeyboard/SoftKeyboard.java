@@ -121,11 +121,11 @@ public class SoftKeyboard extends InputMethodService
      * is displayed, and every time it needs to be re-created such as due to
      * a configuration change.
      */
-    @Override public View onCreateInputView() {
-        mInputView = (KeyboardView) getLayoutInflater().inflate(
+    @Override public View onCreateInputView() {                       // 입력창(화면 키보드) 생성 시 호출. 키보드 배치를 생성하고 뷰를 리턴.
+        mInputView = (KeyboardView) getLayoutInflater().inflate(      // XML 레이아웃 파일을 읽어 View 객체의 트리 구조로 만들어 사용할 수 있게 하는 함수.
                 R.layout.input, null);
-        mInputView.setOnKeyboardActionListener(this);
-        mInputView.setKeyboard(mQwertyKeyboard);
+        mInputView.setOnKeyboardActionListener(this);                 // 뷰에 리스너 지정.
+        mInputView.setKeyboard(mQwertyKeyboard);                      // 뷰에 쿼티 키보드를 세팅한다.
         return mInputView;
     }
 
@@ -134,9 +134,9 @@ public class SoftKeyboard extends InputMethodService
      * be generated, like {@link #onCreateInputView}.
      */
     
-    @Override public View onCreateCandidatesView() {
-        mCandidateView = new CandidateView(this);
-        mCandidateView.setService(this);
+    @Override public View onCreateCandidatesView() {	// candidateView 생성시 호출.
+        mCandidateView = new CandidateView(this);		// 생성
+        mCandidateView.setService(this);				// 서비스 설정. 서비스는 백그라운드에서 실행되는 컴포넌트.
         return mCandidateView;
     }
 	
@@ -146,23 +146,28 @@ public class SoftKeyboard extends InputMethodService
      * bound to the client, and are now receiving all of the detailed information
      * about the target of our edits.
      */
-    @Override public void onStartInput(EditorInfo attribute, boolean restarting) {
+    // 입력되어야 하는 문자에 따라 키보드의 모양이 바뀌는 경우, 예를 들어 전화번호 등 숫자만을 입력할 경우에는 숫자 키보드를 보여주거나 전화번호를 입력하는 경우 전화번호용 키패드를 보여줘야 한다. 
+    // 패스워드를 입력할 경우에는 노출시키지 않아야 하기 때문에 추천단어 기능을 끄고 입력되는 텍스트를 저장해서는 안 됩니다.
+    // 이런 기능은 EditorInfo라는 클래스의 inputType을 통해 얻을수 있다. 
+    @Override public void onStartInput(EditorInfo attribute, boolean restarting) {  
         super.onStartInput(attribute, restarting);
 /*        
         Log.i("Hangul", "onStartInput");
 */
-        clearHangul();
-        clearSejong();
-        previousCurPos = -1;        
+        clearHangul();	// 한글키스택을 0으로 초기화, 추후에 자세하게 주석 업데이트 할것**********************
+        clearSejong();	// 천지인...마찬가지 ****
+        previousCurPos = -1; //-2 -> -1  변수 명으로 볼때 커서의 이전 위치를 저장하는 변수 인듯?
         
         // Reset our state.  We want to do this even if restarting, because
         // the underlying state of the text editor could have changed in any way.
-        mComposing.setLength(0);
-        updateCandidates();
+        //mComposing은 StringBuilder의 객체인데 스트링 클래스는 같은 문자열이면 같은 메모리를 사용하고 스트링빌더는 같은 문자열이라도 변수가 다르면 서로 다른 메모리에 저장한다.
+        //스트링은 메모리불변 , 스트링빌더는 메모리가변. 암튼 그냥 스트링 저장하는 객체라고 생각하자. 그 길이를 0으로 해줬단 말이다.
+        mComposing.setLength(0);	
+        updateCandidates();	// 나중에 함수 분석 후 주석달것!********************
         
         if (!restarting) {
             // Clear shift states.
-            mMetaState = 0;
+            mMetaState = 0;	// long형 변수.
         }
         
         mPredictionOn = false;
@@ -171,21 +176,22 @@ public class SoftKeyboard extends InputMethodService
         
         // We are now going to initialize our state based on the type of
         // text being edited.
-        switch (attribute.inputType&EditorInfo.TYPE_MASK_CLASS) {
-            case EditorInfo.TYPE_CLASS_NUMBER:
+        switch (attribute.inputType&EditorInfo.TYPE_MASK_CLASS) { // 매개변수로 받은 attribute의 타입에 따라..
+            case EditorInfo.TYPE_CLASS_NUMBER:	//숫자나 날짜, 시간이면 ...키보드를 mSymbolsKeyboard로 정한다.
             case EditorInfo.TYPE_CLASS_DATETIME:
                 // Numbers and dates default to the symbols keyboard, with
                 // no extra features.
-                mCurKeyboard = mSymbolsKeyboard;
+                mCurKeyboard = mSymbolsKeyboard; 
                 break;
                 
-            case EditorInfo.TYPE_CLASS_PHONE:
+            case EditorInfo.TYPE_CLASS_PHONE:	// 전화번호 타입이면 키보드를 mSymbolsKeyboard로 정한다.
                 // Phones will also default to the symbols keyboard, though
                 // often you will want to have a dedicated phone keyboard.
                 mCurKeyboard = mSymbolsKeyboard;
                 break;
                 
-            case EditorInfo.TYPE_CLASS_TEXT:
+            case EditorInfo.TYPE_CLASS_TEXT: // 모든 글자의 타입일때 mQwertyKeyboard로 정하고 predictions를 true.
+            	// predictions가 아마 그 후보단어들을 보여줄것인가 말것인가 불린타입으로 보는것인듯.
                 // This is general text editing.  We will default to the
                 // normal alphabetic keyboard, and assume that we should
                 // be doing predictive text (showing candidates as the
@@ -200,6 +206,7 @@ public class SoftKeyboard extends InputMethodService
                         variation == EditorInfo.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
                     // Do not display predictions / what the user is typing
                     // when they are entering a password.
+                	// 패스워드 모드이면 후보단어들을 못보게 하고 뭘 쓰고 있는지 보여주면 안된다.
                     mPredictionOn = false;
                 }
                 
@@ -208,6 +215,7 @@ public class SoftKeyboard extends InputMethodService
                         || variation == EditorInfo.TYPE_TEXT_VARIATION_FILTER) {
                     // Our predictions are not useful for e-mail addresses
                     // or URIs.
+                	// 이메일이나 유알엘 주소를 쓸때는 후보단어들이 적절하게 사용되지 않아서 그냥 false로 준다.
                     mPredictionOn = false;
                 }
                 
@@ -244,7 +252,7 @@ public class SoftKeyboard extends InputMethodService
      * This is called when the user is done editing a field.  We can use
      * this to reset our state.
      */
-    @Override public void onFinishInput() {
+    @Override public void onFinishInput() {// 키보드 사라질때 호출되는 함수.
         super.onFinishInput();
         
         // Clear current composing text and candidates.
@@ -255,11 +263,11 @@ public class SoftKeyboard extends InputMethodService
         // a particular editor, to avoid popping the underlying application
         // up and down if the user is entering text into the bottom of
         // its window.
-        setCandidatesViewShown(false);
+        setCandidatesViewShown(false); // 서비스? 비슷한 기능인듯 그래서 백그라운드에서 실행되고 키보드가 사라지면 candidateview는 숨겨야한다.
         
         mCurKeyboard = mQwertyKeyboard;
         if (mInputView != null) {
-            mInputView.closing();
+            mInputView.closing();  //
         }
     }
     
