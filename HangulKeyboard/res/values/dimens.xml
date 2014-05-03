@@ -23,3 +23,5 @@
     <dimen name="candidate_font_height">16sp</dimen>
     <dimen name="candidate_vertical_padding">6sp</dimen>
 </resources>
+
+<!-- dimens는 dimension의 약자인 것 같다. 크기,치수 등을 정의하는 리소스.  -->
