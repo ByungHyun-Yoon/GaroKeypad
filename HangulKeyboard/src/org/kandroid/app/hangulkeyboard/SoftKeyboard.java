@@ -271,7 +271,7 @@ public class SoftKeyboard extends InputMethodService
         }
     }
     
-    @Override public void onStartInputView(EditorInfo attribute, boolean restarting) {
+    @Override public void onStartInputView(EditorInfo attribute, boolean restarting) { //현재 키보드를 셋키보드함수로 설정하는듯.
         super.onStartInputView(attribute, restarting);
         // Apply the selected keyboard to the input view.
         mInputView.setKeyboard(mCurKeyboard);
@@ -283,7 +283,7 @@ public class SoftKeyboard extends InputMethodService
      * Deal with the editor reporting movement of its cursor.
      */
     
-    @Override public void onUpdateSelection(int oldSelStart, int oldSelEnd,
+    @Override public void onUpdateSelection(int oldSelStart, int oldSelEnd, //새로운 택스트 부분이 보고 되면 호출된다.
             int newSelStart, int newSelEnd,
             int candidatesStart, int candidatesEnd) {
     	
