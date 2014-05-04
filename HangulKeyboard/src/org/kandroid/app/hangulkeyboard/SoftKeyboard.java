@@ -1975,7 +1975,7 @@ public class SoftKeyboard extends InputMethodService
 	                    jong_idx = h_jongsung_idx[mHangulJamoStack[2]+1];;
 	                    newHangulChar = 0xAC00 + ((cho_idx * 21 * 28) + (jung_idx * 28) + jong_idx);
 	                    hangulSendKey(newHangulChar,HCURSOR_UPDATE);
-	                    mHangulState = H_STATE_6; H_STATE_6; // goto  초성,중성,종성(복자음)
+	                    mHangulState = H_STATE_6; // goto  초성,중성,종성(복자음)
 	                }
 	                else { // if 종성 != 복자음
 	                	
